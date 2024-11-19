@@ -8,6 +8,7 @@ import streamlit as st
 # with st.sidebar:
 #     together_api_key = st.text_input("Together.ai API Key", key="chatbot_api_key", type="password")
 st.title("Goopers")
+st.write("*Disclaimer:* We currently have only 2 influencers in the database, one is a fitness influencer and the other is a mountain trekking influencer.")
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
