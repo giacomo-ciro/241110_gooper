@@ -68,8 +68,8 @@ def cosine_similarity(vectors, target_vector):
 
 def retrieve_top_k_influencers_request(brand_description, k = 1):
 
-    vdb = np.load('./embeddings.npy')
-    description = pd.read_csv('./description.csv')
+    vdb = np.load('./data/embeddings.npy')
+    description = pd.read_csv('./data/description.csv')
 
     brand_embeddings = generate_embeddings([brand_description], "BAAI/bge-base-en-v1.5")[0]
 
