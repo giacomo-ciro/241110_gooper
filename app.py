@@ -1,40 +1,35 @@
-# ---------------------- TOGETHER API KEY -------------------------- #
-# 5a532872525382e32ebc396c6cc682d3b8d8d5ea428ef9468404286bb1417f2c   #
-# ------------------------------------------------------------------ #
-
 from utils import *
 import streamlit as st
 
-# with st.sidebar:
-#     together_api_key = st.text_input("Together.ai API Key", key="chatbot_api_key", type="password")
+TOGETHER_API_KEY = "5a532872525382e32ebc396c6cc682d3b8d8d5ea428ef9468404286bb1417f2c"
+client = Together(api_key = TOGETHER_API_KEY)
+
 st.title("Gooper V1")
-st.write("*Disclaimer:* We currently have only 2 influencers in the database, one is a fitness influencer and the other is a mountain trekking influencer.")
+# st.write("*Disclaimer:* We currently have only 2 influencers in the database, one is a fitness influencer and the other is a mountain trekking influencer.")
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
         {
             "role": "assistant",
-            "content": "Hi, I am here to help you find the best influencer for your brand. Please, provide a detailed description of your brand!",
+            "content": "Hi, I am here to help you find the best influencer for your brand. To begin, tell me something about your brand!",
         }
     ]
 
 for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
-if prompt := st.chat_input():
-
-    together_api_key = "5a532872525382e32ebc396c6cc682d3b8d8d5ea428ef9468404286bb1417f2c"
+if userPrompt := st.chat_input():
     
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    st.chat_message("user").write(prompt)
+    # Save input
+    st.session_state.messages.append({"role": "user", "content": userPrompt})
+    st.chat_message("user").write(userPrompt)
     
-    influencer_description = retrieve_top_k_influencers_request(prompt, k = 1)[0]
-    prompt = "Explain why the provided influencer is a strong match for the following brand:\n\n" + prompt
+    # Generate response
+    msg = generate(client=client,
+                   TASK_TYPE="rag",
+                   userPrompt=userPrompt
+                   )
     
-    msg = together_request(user_message=prompt,
-                           api_key=together_api_key,
-                           request_type='retrieve_top_k_influencers',
-                           influencer_description_1=influencer_description,
-                           )
+    # Save response
     st.session_state.messages.append({"role": "assistant", "content": msg})
     st.chat_message("assistant").write(msg)

@@ -1,43 +1,12 @@
-import requests
-import pandas as pd
+from together import Together
 import numpy as np
-import together
 
-TOGETHER_API_KEY = "5a532872525382e32ebc396c6cc682d3b8d8d5ea428ef9468404286bb1417f2c"
+# TOGETHER_API_KEY = "5a532872525382e32ebc396c6cc682d3b8d8d5ea428ef9468404286bb1417f2c"
+# client = Together(api_key = TOGETHER_API_KEY)
 
-summarize_influencer = """You are a social media analyst.
-Your task is to generate a concise, professional summary of an influencer's Instagram profile based on its publicly available information.
-
-Guidelines for the Summary:
-- Tone: Informative and professional.
-- Content: Highlight the profile's main themes, the type of content posted, audience engagement style, and any notable achievements or unique features.
-- Length: Approximately 7-8 sentences (200-250 words).
-- Example Structure: Start with the profile's focus (e.g., \"This profile showcases...\"), describe the content's themes (e.g., \"primarily featuring ...\"), and mention any distinguishing features (e.g., \"known for...\").  
-"""
-
-summarize_brand = """You are a marketing strategist.
-Your task is to generate a concise, professional summary of a brand’s Instagram profile based on its publicly available information.  
-
-Guidelines for the Summary:  
-- Tone: Informative and professional.  
-- Content: Highlight the brand's industry, key themes of its Instagram presence, type of content (e.g., promotional campaigns, product highlights, user-generated content), target audience, and any unique selling points or achievements.  
-- Length: Approximately 7-8 sentences (200-250 words).  
-- Example Structure: Start with the brand's core identity (e.g., "This profile represents ..."), mention its Instagram strategy (e.g., "focusing on ..."), and include any notable features (e.g., "renowned for ...").  
-"""
-
-retrieve_top_k_influencers = """You are an advanced AI specializing in influencer marketing.
-Your task is to analyze the provided influencer description and generate a compelling response explaining why the influencer is a strong match for the given brand.
-Be specific in your reasoning, citing traits such as audience demographics, content style, engagement metrics, or past collaborations that align with the company’s objectives.
-
-Influencer Descriptions:  
-{influencer_description_1}
-
-Output:  
-   - Reason for Match: [Explain why Influencer A aligns with the campaign goals.]  
-   - Supporting Details: [Include specific information from the description.]
-"""
-
-def cosine_similarity(vectors, target_vector):
+def cosine_similarity(vectors,
+                      target_vector
+                      ):
     """
     Compute the cosine similarity between a set of vectors and a target vector.
 
@@ -48,101 +17,129 @@ def cosine_similarity(vectors, target_vector):
     Returns:
         np.ndarray: A 1D array containing cosine similarities for each vector in the set.
     """
-    # Convert to numpy arrays if not already
-    vectors = np.array(vectors)
-    target_vector = np.array(target_vector)
+    if not isinstance(vectors, np.ndarray):
+        vectors = np.array(vectors)
+    if not isinstance(target_vector, np.ndarray):
+        target_vector = np.array(target_vector)
     
-    # Compute dot products between each vector and the target vector
     dot_products = np.dot(vectors, target_vector)
-    
-    # Compute norms of the vectors
+
     vector_norms = np.linalg.norm(vectors, axis=1)
     target_norm = np.linalg.norm(target_vector)
     
-    # Avoid division by zero
     if target_norm == 0:
         return np.zeros_like(dot_products)
     
-    # Compute cosine similarities
     return dot_products / (vector_norms * target_norm)
 
-def retrieve_top_k_influencers_request(brand_description, k = 1):
+def retrieve(client,
+             query,
+             vdb = None,
+             descriptions = None,
+             ):
+    """Retrieve the most appropriate influencer's description from the influencer database using Together API to embed the query.
 
-    vdb = np.load('./data/embeddings.npy')
-    description = pd.read_csv('./data/description.csv')
+    Args:
+        query: str. The input query.
+        vdb: np.ndarray. A set of vectors representing influencer descriptions.
+        descriptions: list. A list of corresponding descriptions.
 
-    brand_embeddings = generate_embeddings([brand_description], "BAAI/bge-base-en-v1.5")[0]
-
-    description['similarity'] = cosine_similarity(vdb, brand_embeddings)
+    Returns:
+        str: The retrieved text.
+    """
     
-    return description.sort_values(by='similarity', ascending=False)['description'].iloc[:k].to_list()
+    if vdb is None:
+        vdb = np.load('./data/embeddings.npy')
+        
+    if descriptions is None:
+        descriptions = open('./data/descriptions.txt', 'r').read().replace("\"","").splitlines()
 
+    model = "BAAI/bge-base-en-v1.5"
 
-def together_request(user_message, api_key = None, request_type = 'default', influencer_description_1 = None):
+    out = client.embeddings.create(
+        input=query,
+        model=model,
+    )
 
-    if request_type == 'default':
-        instructions = ''
-    elif request_type == 'summarize_influencer':
-        instructions = summarize_influencer
-    elif request_type == 'summarize_brand':
-        instructions = summarize_brand
-    elif request_type == 'retrieve_top_k_influencers':
-        if not influencer_description_1:
-            return "influencer_description_1 required when request_type == 'retrieve_top_k_influencers'."
-        instructions = retrieve_top_k_influencers.format(influencer_description_1=influencer_description_1)
-    else:
-        return "Invalid request type. Please choose from 'default', 'summarize_influencer', 'summarize_brand', or 'retrieve_top_k_influencers'."
+    query = out.data[0].embedding
 
-    if not api_key:
-        return "Please add your Together.ai API key to continue."
+    similarities = cosine_similarity(vdb, query)
 
-    url = "https://api.together.xyz/v1/chat/completions"
+    idx = np.argmax(similarities)
+    
+    return descriptions[idx]
 
-    payload = {
-        "model": "meta-llama/Llama-3.2-3B-Instruct-Turbo",
-        "messages": [
+def generate(client,
+             TASK_TYPE=None,        
+             userPrompt=None,
+             imageUrl=None
+             ):
+    """Generate text using the Together API.
+
+    Args:
+        TASK_TYPE: str. The type of task to generate text for. Options are "summarize_post", "summarize_influencer", "summarize_brand", "rag".
+        userPrompt: str. The user prompt to provide to the model.
+        imageUrl: str. The URL of the image to be described (required for "summarize_post" task).
+
+    Returns:
+        str: The generated text.
+    """
+
+    if TASK_TYPE is None:
+        raise ValueError("TASK_TYPE cannot be None.")
+    
+    if TASK_TYPE == "summarize_post":
+        
+        model = "meta-llama/Llama-Vision-Free"
+        systemInstruction = open('./data/prompts/describe_image.txt', 'r').read()
+        userPrompt = "Summarize the content of this instagram post"
+        
+        messages=[
             {
                 "role": "system",
-                "content": f"{instructions}"
+                "content": f"{systemInstruction}",
             },
             {
                 "role": "user",
-                "content": f"{user_message}"
-            }
-        ],
-        "max_tokens": 512,
-        "temperature": 0.7,
-        "top_p": 0.7,
-        "top_k": 50,
-        "repetition_penalty": 1,
-        "stream": False
-    }
-    headers = {
-        "accept": "application/json",
-        "content-type": "application/json",
-        "authorization": f"Bearer {api_key}"
-    }
+                "content": [{"type": "text", "text": userPrompt}, {"type": "image_url", "image_url": {"url": imageUrl}}],
+            }]
 
-    response = requests.post(url, json=payload, headers=headers)
+    else:
+        
+        model = "meta-llama/Llama-3.2-3B-Instruct-Turbo"
 
-    content = response.json()['choices'][0]['message']['content'].replace('. ', '.\n')
-    return content
-
-def generate_embeddings(input_texts: list,
-                        model_api_string: str
-                        ) -> list:
-    """Generate embeddings from Together python library.
-
-    Args:
-        input_texts: a list of string input texts.
-        model_api_string: str. An API string for a specific embedding model of your choice.
-
-    Returns:
-        embeddings_list: a list of embeddings. Each element corresponds to the each input text.
-    """
-    together_client = together.Together(api_key = TOGETHER_API_KEY)
-    outputs = together_client.embeddings.create(
-        input=input_texts,
-        model=model_api_string,
+        if TASK_TYPE == "summarize_influencer":
+            systemInstruction = open('./data/prompts/summarize_influencer.txt', 'r').read()
+            userPrompt = "Summarize the content of this influencer's profile:\n\n" + userPrompt
+        
+        elif TASK_TYPE == "summarize_brand":
+            systemInstruction = open('./data/prompts/summarize_brand.txt', 'r').read()
+            userPrompt = "Summarize the content of this brand's profile:\n\n" + userPrompt
+        
+        elif TASK_TYPE == "rag":
+            systemInstruction = open('./data/prompts/rag.txt', 'r').read().format(retrieve(client, userPrompt))
+            userPrompt = "Explain why the provided influencer is a strong match for the following brand:\n\n" + userPrompt
+        
+        else:
+            raise ValueError(f"Invalid TASK_TYPE: {TASK_TYPE}.")
+        
+        messages=[
+            {
+                "role": "system",
+                "content": f"{systemInstruction}",
+            },
+            {
+                "role": "user",
+                "content": userPrompt,
+            }]
+        
+    stream = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        max_tokens=512,
+        temperature=0.7,
+        top_p = 0.7,
+        top_k = 50,
+        stream=False,
     )
-    return np.array([x.embedding for x in outputs.data])
+    return stream.choices[0].message.content.replace('. ', '.\n')
