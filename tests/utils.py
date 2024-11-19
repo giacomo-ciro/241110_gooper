@@ -2,6 +2,10 @@ import requests
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 import numpy as np
+import together
+from together import Together
+
+TOGETHER_API_KEY = "5a532872525382e32ebc396c6cc682d3b8d8d5ea428ef9468404286bb1417f2c"
 
 summarize_influencer = """You are a social media analyst.
 Your task is to generate a concise, professional summary of an influencer's Instagram profile based on its publicly available information.
@@ -66,11 +70,10 @@ def cosine_similarity(vectors, target_vector):
 
 def retrieve_top_k_influencers_request(brand_description, k = 1):
 
-    vdb = np.load('embeddings.npy')
-    description = pd.read_csv('description.csv')
+    vdb = np.load('./embeddings.npy')
+    description = pd.read_csv('./description.csv')
 
-    model = SentenceTransformer("BAAI/bge-base-en-v1.5")
-    brand_embeddings = model.encode(brand_description)
+    brand_embeddings = generate_embeddings([brand_description], "BAAI/bge-base-en-v1.5")[0]
 
     description['similarity'] = cosine_similarity(vdb, brand_embeddings)
     
@@ -127,29 +130,21 @@ def together_request(user_message, api_key = None, request_type = 'default', inf
     content = response.json()['choices'][0]['message']['content'].replace('. ', '.\n')
     return content
 
-import numpy as np
+def generate_embeddings(input_texts: list,
+                        model_api_string: str
+                        ) -> list:
+    """Generate embeddings from Together python library.
 
-def cosine_similarity_matrix(vectors, target_vector):
-    """
-    Compute the cosine similarity between a set of vectors and a target vector.
-
-    Parameters:
-        vectors (array-like): A 2D array where each row is a vector.
-        target_vector (array-like): A 1D array representing the target vector.
+    Args:
+        input_texts: a list of string input texts.
+        model_api_string: str. An API string for a specific embedding model of your choice.
 
     Returns:
-        np.ndarray: A 1D array containing cosine similarities for each vector in the set.
+        embeddings_list: a list of embeddings. Each element corresponds to the each input text.
     """
-
-    vectors = np.array(vectors)
-    target_vector = np.array(target_vector)
-    
-    dot_products = np.dot(vectors, target_vector)
-
-    vector_norms = np.linalg.norm(vectors, axis=1)
-    target_norm = np.linalg.norm(target_vector)
-    
-    if target_norm == 0:
-        return np.zeros_like(dot_products)
-    
-    return dot_products / (vector_norms * target_norm)
+    together_client = together.Together(api_key = TOGETHER_API_KEY)
+    outputs = together_client.embeddings.create(
+        input=input_texts,
+        model=model_api_string,
+    )
+    return np.array([x.embedding for x in outputs.data])
