@@ -1,9 +1,7 @@
 import requests
 import pandas as pd
-from sentence_transformers import SentenceTransformer
 import numpy as np
 import together
-from together import Together
 
 TOGETHER_API_KEY = "5a532872525382e32ebc396c6cc682d3b8d8d5ea428ef9468404286bb1417f2c"
 
