@@ -5,8 +5,8 @@
 from utils import *
 import streamlit as st
 
-with st.sidebar:
-    together_api_key = st.text_input("Together.ai API Key", key="chatbot_api_key", type="password")
+# with st.sidebar:
+#     together_api_key = st.text_input("Together.ai API Key", key="chatbot_api_key", type="password")
 st.title("Goopers")
 
 if "messages" not in st.session_state:
@@ -21,6 +21,8 @@ for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
 if prompt := st.chat_input():
+
+    together_api_key = "5a532872525382e32ebc396c6cc682d3b8d8d5ea428ef9468404286bb1417f2c"
     
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
