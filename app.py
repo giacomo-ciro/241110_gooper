@@ -9,11 +9,6 @@ import streamlit as st
 #     together_api_key = st.text_input("Together.ai API Key", key="chatbot_api_key", type="password")
 st.title("Goopers")
 
-import os
-st.write(os.listdir())
-os.write(os.curdir)
-
-
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
         {
