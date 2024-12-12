@@ -9,55 +9,19 @@ url = "https://edcqmzluacqdqqmmklik.supabase.co"
 key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVkY3Ftemx1YWNxZHFxbW1rbGlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQwMTM1MDgsImV4cCI6MjA0OTU4OTUwOH0.Po1jIO14A6mCuN1xo-K6ikpKR1XlGt4_ivoYVX2raSU"
 supabase = create_client(url, key)
 
-def cosine_similarity(vectors,
-                      target_vector
-                      ):
-    """
-    Compute the cosine similarity between a set of vectors and a target vector.
-
-    Parameters:
-        vectors (array-like): A 2D array where each row is a vector.
-        target_vector (array-like): A 1D array representing the target vector.
-
-    Returns:
-        np.ndarray: A 1D array containing cosine similarities for each vector in the set.
-    """
-    if not isinstance(vectors, np.ndarray):
-        vectors = np.array(vectors)
-    if not isinstance(target_vector, np.ndarray):
-        target_vector = np.array(target_vector)
-    
-    dot_products = np.dot(vectors, target_vector)
-
-    vector_norms = np.linalg.norm(vectors, axis=1)
-    target_norm = np.linalg.norm(target_vector)
-    
-    if target_norm == 0:
-        return np.zeros_like(dot_products)
-    
-    return dot_products / (vector_norms * target_norm)
 
 def retrieve(client,
              query,
-             vdb = None,
-             descriptions = None,
              ):
     """Retrieve the most appropriate influencer's description from the influencer database using Together API to embed the query.
 
     Args:
-        query: str. The input query.
-        vdb: np.ndarray. A set of vectors representing influencer descriptions.
-        descriptions: list. A list of corresponding descriptions.
+        client: Together. The Together client.
+        query: str. The query to embed and retrieve the most appropriate influencer's description.
 
     Returns:
         str: The retrieved text.
     """
-    
-    # if vdb is None:
-    #     vdb = np.load('./data/embeddings.npy')
-        
-    # if descriptions is None:
-    #     descriptions = open('./data/descriptions.txt', 'r').read().replace("\"","").splitlines()
 
     model = "BAAI/bge-base-en-v1.5"
 
@@ -149,3 +113,6 @@ def generate(client,
         stream=False,
     )
     return stream.choices[0].message.content.replace('. ', '.\n')
+
+def get_influencer_count():
+    return supabase.rpc('get_count').execute().data

@@ -1,8 +1,11 @@
 from utils import *
 import streamlit as st
 
+
+CURRENT_VERSION = "1.1.0"
+
 st.set_page_config(
-    page_title="Gooper V1",
+    page_title=f"Gooper v{CURRENT_VERSION}",
     page_icon="🤖",
     menu_items={
         'Get Help': 'https://www.linkedin.com/in/giacomo-ciro/',
@@ -14,8 +17,8 @@ st.set_page_config(
 TOGETHER_API_KEY = "5a532872525382e32ebc396c6cc682d3b8d8d5ea428ef9468404286bb1417f2c"
 client = Together(api_key = TOGETHER_API_KEY)
 
-st.title("Gooper v1.1.0")
-# st.write("*Disclaimer:* We currently have only 2 influencers in the database, one is a fitness influencer and the other is a mountain trekking influencer.")
+st.title(f"Gooper v{CURRENT_VERSION}")
+st.write(f"*No. of Influencers in current database:* `{get_influencer_count():,}`")
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
