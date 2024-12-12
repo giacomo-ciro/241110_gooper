@@ -12,7 +12,7 @@ Avoid generalizations or fabrications if specific details are not mentioned.
 Use a neutral and fact-based tone.
 
 Format:
-Start with something like "I think the best fit for your brand is <influencer name> (<instagram_handle>). Include the instagram handle only if provided, otherwise leave blank.
-Then, briefly introduce the influencer, citing only available demographics or other factual information.
+Always start with: "I think the best fit for your brand is <influencer name> (@<instagram_handle>)." Inlcude the instagram handle only when provided explicitly in the description.
+Now, briefly introduce the influencer, citing only available demographics or other factual information.
 Finally, clearly explain how the influencer aligns with the campaign goals based solely on the description.
 Your answer should be approximately 100 words. and make sure to divide the text in multiple paragraph for ease of read.
