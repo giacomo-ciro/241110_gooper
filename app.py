@@ -14,7 +14,7 @@ st.set_page_config(
 TOGETHER_API_KEY = "5a532872525382e32ebc396c6cc682d3b8d8d5ea428ef9468404286bb1417f2c"
 client = Together(api_key = TOGETHER_API_KEY)
 
-st.title("Gooper V1")
+st.title("Gooper v1.1.0")
 # st.write("*Disclaimer:* We currently have only 2 influencers in the database, one is a fitness influencer and the other is a mountain trekking influencer.")
 
 if "messages" not in st.session_state:
