@@ -1,14 +1,20 @@
 # 241110_instagram_profiles_affinity
-Advanced ML techniques to predcit an influencer's brand affinity 
+Building a search engine for influencers. 
 
-## Growing Database
-Access the shared google sheet at [this link](https://docs.google.com/spreadsheets/d/1WjyvBqhvK_RQEd12jbSjRYDGLYZQ-fUneVDYWaNFQHk/edit?usp=sharing). Ask for editing permission the first time you access and I will approve it.  
+## To-do list
+- [ ] Implement `ValidatorModel` for conversational ability
+- [ ] Implement `GooperModel` class and API calls
+- [x] ~~Migrate Influencer Database to Supabase~~
+- [ ] Scale database to 100,000 influencers
+- [ ] Implement model API for custom deployment
+
+## Release History
+| Version | Changes | Status |
+|---------|---------|--------|
+| 1.1.0     | Migrate Influencer Database to Supabase     | Online     |
+| 1.0.0     | Initial Deployment on Streamlit Cloud     | -     |
 
 ## Resources
 - [Supabase Docs](https://supabase.com/docs/reference/python/introduction)
 - [Supabse Project](https://supabase.com/dashboard/project/edcqmzluacqdqqmmklik)
 - [pgvector](https://github.com/pgvector/pgvector)
-
-## Release History
-- 1.1.0 - Migrate database from local csv to Supabase
-- 1.0.0 - Initial deployment
