@@ -1,8 +1,9 @@
-from utils import *
 import streamlit as st
+from gooper import GooperModel
 
 
-CURRENT_VERSION = "1.1.0"
+gooper = GooperModel()
+CURRENT_VERSION = gooper.version
 
 st.set_page_config(
     page_title=f"Gooper v{CURRENT_VERSION}",
@@ -14,11 +15,8 @@ st.set_page_config(
     }
 )
 
-TOGETHER_API_KEY = "5a532872525382e32ebc396c6cc682d3b8d8d5ea428ef9468404286bb1417f2c"
-client = Together(api_key = TOGETHER_API_KEY)
-
 st.title(f"Gooper v{CURRENT_VERSION}")
-st.write(f"*No. of Influencers in current database:* `{get_influencer_count():,}`")
+st.write(f"*No. of Influencers in current database:* `{gooper.get_influencer_count():,}`")
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
@@ -37,11 +35,7 @@ if userPrompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": userPrompt})
     st.chat_message("user").write(userPrompt)
     
-    # Generate response
-    msg = generate(client=client,
-                   TASK_TYPE="rag",
-                   userPrompt=userPrompt
-                   )
+    msg = gooper.generate(userPrompt)
     
     # Save response
     st.session_state.messages.append({"role": "assistant", "content": msg})

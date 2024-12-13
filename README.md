@@ -3,7 +3,8 @@ Building a search engine for influencers.
 
 ## To-do list
 - [ ] Implement `ValidatorModel` for conversational ability
-- [ ] Implement `GooperModel` class and API calls
+- [x] ~~Implement `GooperModel` class~~
+- [ ] Convert from client calls to API calls
 - [x] ~~Migrate Influencer Database to Supabase~~
 - [ ] Scale database to 100,000 influencers
 - [ ] Implement model API for custom deployment
@@ -18,3 +19,9 @@ Building a search engine for influencers.
 - [Supabase Docs](https://supabase.com/docs/reference/python/introduction)
 - [Supabse Project](https://supabase.com/dashboard/project/edcqmzluacqdqqmmklik)
 - [pgvector](https://github.com/pgvector/pgvector)
+
+## Commands
+```
+mkvirtualenv myenv --python=python3.10
+workon myenv
+```
