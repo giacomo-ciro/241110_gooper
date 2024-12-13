@@ -1,3 +1,5 @@
+import re
+
 from together import Together
 from supabase import create_client
 
@@ -8,7 +10,7 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 class GooperModel:
     def __init__(self):
         
-        self.version = "1.1.0"
+        self.version = "1.1.2"
 
         # Together
         self.together = Together(api_key = TOGETHER_API_KEY)
@@ -20,6 +22,49 @@ class GooperModel:
 
         return
     
+    def discriminator_agent(self, 
+                            userPrompt
+                            ):
+        """Discriminate whether a user's prompt is valid or not
+        
+        Args:
+            userPrompt: str. The user prompt to provide to the model.
+            
+        Returns:
+            int: 1 if the prompt is valid, 0 if not.
+        """
+        
+        systemInstruction = open('./data/prompts/discriminator.txt', 'r').read()
+            
+        messages=[
+            {
+                "role": "system",
+                "content": f"{systemInstruction}",
+            },
+            {
+                "role": "user",
+                "content": userPrompt,
+            }]
+            
+        response = self.together.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            max_tokens=512,
+            temperature=0.7,
+            top_p = 0.7,
+            top_k = 50,
+            stream=False,
+        )
+
+        response = response.choices[0].message.content.replace('. ', '.\n')
+        print('-----')
+        print(response)
+        response = response.split(':')[-1]
+        response = re.sub(r'[^a-zA-Z]+', '', response)
+        print(response)
+        return 1 if response == "valid" else 0
+        
+
     def retrieve(self,
                  query=None,
                  ):
@@ -47,7 +92,7 @@ class GooperModel:
         
         return response.data[0]['description']
     
-    def generate(self,
+    def rag_agent(self,
                  userPrompt
                  ):
         """Answer a user's prompt using the Together API.
@@ -83,6 +128,23 @@ class GooperModel:
             stream=False,
         )
         return response.choices[0].message.content.replace('. ', '.\n')
+    
+    def generate(self,
+                 userPrompt
+                 ):
+        """Wrapper for the entire gooper pipeline.
+
+        Args:
+            userPrompt: str. The user prompt to provide to the model.
+
+        Returns:
+            str: The generated text.
+        """
+        
+        if self.discriminator_agent(userPrompt):
+            return self.rag_agent(userPrompt)
+        else:
+            return "I'm sorry, I am not able to provide a response to this prompt. Please, provide your brand's description and I will help you find the best influencer for your needs!"
 
     def get_influencer_count(self):
         return self.supabase.rpc('get_count').execute().data

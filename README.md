@@ -2,8 +2,9 @@
 Building a search engine for influencers. 
 
 ## To-do list
-- [ ] Implement `ValidatorModel` for conversational ability
+- [x] ~~Implement `discriminator_agent` for conversational ability~~
 - [x] ~~Implement `GooperModel` class~~
+- [ ] Implement `feedback_agent` to provide feedback when invalid input
 - [ ] Convert from client calls to API calls
 - [x] ~~Migrate Influencer Database to Supabase~~
 - [ ] Scale database to 100,000 influencers
@@ -12,7 +13,9 @@ Building a search engine for influencers.
 ## Release History
 | Version | Changes | Status |
 |---------|---------|--------|
-| 1.1.0     | Migrate Influencer Database to Supabase     | Online     |
+| 1.1.2     | Implement a discriminator agent to improve conversational ability     | Online     |
+| 1.1.1     | Re-organize the model in a single class    | -     |
+| 1.1.0     | Migrate Influencer Database to Supabase     | -     |
 | 1.0.0     | Initial Deployment on Streamlit Cloud     | -     |
 
 ## Resources
