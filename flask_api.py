@@ -1,17 +1,25 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from gooper import GooperModel
 
 gooper = GooperModel()
 app = Flask(__name__)
-docs = "Welcome to the Gooper API. The only available endpoint is `/generate/` followed by the user's prompt the model will respond to. For example, '/generate/my%20brand%20specializes%20in%20food' will generate a response to the prompt 'my brand specializes in food'"
+
 @app.route('/')
 def hello_world():
-    return docs
+    return open("api_docs.html", "r").read()
+
+
+@app.route('/generate', methods=['POST'])
+def generate():
+    data = request.get_json()
+    if not data or 'prompt' not in data:
+        return jsonify({'error': 'Invalid input, "prompt" is required'}), 400
     
-@app.route('/generate/<string:prompt>')
-def generate(prompt):
+    prompt = data['prompt']
     response = gooper.generate(prompt)
-    return {"response": response}
+    
+    return jsonify({"response": response})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
