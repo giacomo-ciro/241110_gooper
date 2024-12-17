@@ -2,6 +2,9 @@ from flask import Flask, request, jsonify
 from gooper import GooperModel
 from flask_cors import CORS
 
+# import os
+# os.chdir('./mysite')
+
 gooper = GooperModel()
 app = Flask(__name__)
 CORS(app)
@@ -25,8 +28,8 @@ def generate():
 def version():
     return jsonify({"response": gooper.version})
 
-@app.route('/database_count', methods=['GET'])
-def database_count():
+@app.route('/influencer_count', methods=['GET'])
+def influencer_count():
     return jsonify({"response": gooper.get_influencer_count()})
 
 if __name__ == '__main__':
