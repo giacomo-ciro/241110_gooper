@@ -1,0 +1,47 @@
+inputUrl                       <class 'str'>  
+id                             <class 'str'>  
+username                       <class 'str'>  
+url                            <class 'str'>  
+fullName                       <class 'str'>  
+biography                      <class 'str'>  
+externalUrl                    <class 'str'>  
+externalUrlShimmed             <class 'str'>  
+followersCount                 <class 'int'>  
+followsCount                   <class 'int'>  
+hasChannel                     <class 'bool'>  
+highlightReelCount             <class 'int'>  
+isBusinessAccount              <class 'bool'>  
+joinedRecently                 <class 'bool'>  
+businessCategoryName           <class 'str'>  
+private                        <class 'bool'>  
+verified                       <class 'bool'>  
+profilePicUrl                  <class 'str'>  
+profilePicUrlHD                <class 'str'>  
+igtvVideoCount                 <class 'int'>  
+relatedProfiles                <class 'list'>  
+latestIgtvVideos               <class 'list'>  
+postsCount                     <class 'int'>  
+latestPosts                    <class 'list'>  
+  
+---------------- latestPosts[0] ---------------  
+  
+id                             <class 'str'>  
+type                           <class 'str'>        # [Sidecar, Image, Video]  
+shortCode                      <class 'str'>  
+caption                        <class 'str'>        # caption of the post  
+hashtags                       <class 'list'>  
+mentions                       <class 'list'>  
+url                            <class 'str'>  
+commentsCount                  <class 'int'>  
+dimensionsHeight               <class 'int'>  
+dimensionsWidth                <class 'int'>  
+displayUrl                     <class 'str'>        # image of the post (first image if sidecar)  
+images                         <class 'list'>  
+alt                            <class 'str'>  
+likesCount                     <class 'int'>  
+timestamp                      <class 'str'>  
+childPosts                     <class 'list'>  
+ownerUsername                  <class 'str'>  
+ownerId                        <class 'str'>  
+taggedUsers                    <class 'list'>  
+isPinned                       <class 'bool'>  
