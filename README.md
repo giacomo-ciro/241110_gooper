@@ -9,6 +9,7 @@ Building a search engine for influencers.
 - [x] ~~Migrate Influencer Database to Supabase~~
 - [ ] Scale database to 100,000 influencers
 - [ ] embed profile summary directly (bypass description generation)
+- [ ] improve performance (model is slow to respond)
 - [x] ~~Implement model API for custom deployment~~
 
 ## Release History
