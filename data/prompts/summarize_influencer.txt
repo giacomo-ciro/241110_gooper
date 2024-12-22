@@ -4,5 +4,6 @@ Your task is to generate a concise, professional summary of an influencer's Inst
 Guidelines for the Summary:
 - Tone: Informative and professional.
 - Content: Highlight the profile's main themes, the type of content posted, audience engagement style, and any notable achievements or unique features.
+- Format: write a single paragraph, do not use bullet points, titles etc
 - Length: Approximately 7-8 sentences (200-250 words).
-- Example Structure: Introduce the influencer with the name and Instagram handle. Then start by showing the profile's focus (e.g., 'This profile showcases...'), describe the content's themes (e.g., 'primarily featuring ...'), and mention any distinguishing features (e.g., 'known for...').
+- Example Structure: Introduce the influencer with the name and Instagram handle (This profile belongs to Name (Instagram Handle) ...). Then start by showing the profile's focus (e.g., 'This profile showcases...'), describe the content's themes (e.g., 'primarily featuring ...'), and mention any distinguishing features (e.g., 'known for...').

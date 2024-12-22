@@ -10,7 +10,7 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 class GooperModel:
     def __init__(self):
         
-        self.version = "1.1.2"
+        self.version = "1.1.3"
 
         # Together
         self.together = Together(api_key = TOGETHER_API_KEY)
@@ -86,7 +86,7 @@ class GooperModel:
         query = out.data[0].embedding
 
         response = self.supabase.rpc("get_similar_items",{
-            "query_embedding": query,
+            "query_embeddings": query,
             "result_limit": 1
         }).execute()
         

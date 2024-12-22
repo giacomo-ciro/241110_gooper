@@ -8,12 +8,13 @@ Building a search engine for influencers.
 - [ ] Convert from client calls to API calls
 - [x] ~~Migrate Influencer Database to Supabase~~
 - [ ] Scale database to 100,000 influencers
-- [ ] Implement model API for custom deployment
+- [x] ~~Implement model API for custom deployment~~
 
 ## Release History
 | Version | Changes | Status |
 |---------|---------|--------|
-| 1.1.2     | Implement a discriminator agent to improve conversational ability     | Online     |
+| 1.1.3     | Scale up the database to 90 influencers     | Online     |
+| 1.1.2     | Implement a discriminator agent to improve conversational ability     | -     |
 | 1.1.1     | Re-organize the model in a single class    | -     |
 | 1.1.0     | Migrate Influencer Database to Supabase     | -     |
 | 1.0.0     | Initial Deployment on Streamlit Cloud     | -     |
