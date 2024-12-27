@@ -9,6 +9,9 @@ gooper = GooperModel()
 app = Flask(__name__)
 CORS(app)
 
+# gooper = GooperModel(model_text="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo")    # 0.18$
+gooper = GooperModel(model_text="meta-llama/Meta-Llama-3-8B-Instruct-Lite")         # 0.10$
+
 @app.route('/')
 def hello_world():
     return open("api_docs.html", "r").read()
@@ -31,6 +34,10 @@ def version():
 @app.route('/influencer_count', methods=['GET'])
 def influencer_count():
     return jsonify({"response": gooper.get_influencer_count()})
+
+@app.route('/model_name', methods=['GET'])
+def model_name():
+    return jsonify({"response": gooper.model_text})
 
 if __name__ == '__main__':
     app.run(debug=True)

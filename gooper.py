@@ -8,14 +8,16 @@ SUPABSE_URL = "https://edcqmzluacqdqqmmklik.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVkY3Ftemx1YWNxZHFxbW1rbGlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQwMTM1MDgsImV4cCI6MjA0OTU4OTUwOH0.Po1jIO14A6mCuN1xo-K6ikpKR1XlGt4_ivoYVX2raSU"
 
 class GooperModel:
-    def __init__(self):
+    def __init__(self,
+                 model_text = "meta-llama/Llama-3.2-3B-Instruct-Turbo",
+                 model_embeddings = "BAAI/bge-base-en-v1.5"):
         
         self.version = "1.1.3"
 
         # Together
         self.together = Together(api_key = TOGETHER_API_KEY)
-        self.embedding_model = "BAAI/bge-base-en-v1.5"
-        self.model = "meta-llama/Llama-3.2-3B-Instruct-Turbo"
+        self.model_text = model_text
+        self.model_embeddings = model_embeddings
 
         # Supabase
         self.supabase = create_client(SUPABSE_URL, SUPABASE_KEY)
@@ -47,7 +49,7 @@ class GooperModel:
             }]
             
         response = self.together.chat.completions.create(
-            model=self.model,
+            model=self.model_text,
             messages=messages,
             max_tokens=512,
             temperature=0.7,
@@ -80,7 +82,7 @@ class GooperModel:
 
         out = self.together.embeddings.create(
             input=query,
-            model=self.embedding_model,
+            model=self.model_embeddings,
         )
 
         query = out.data[0].embedding
@@ -119,7 +121,7 @@ class GooperModel:
             }]
             
         response = self.together.chat.completions.create(
-            model=self.model,
+            model=self.model_text,
             messages=messages,
             max_tokens=512,
             temperature=0.7,
