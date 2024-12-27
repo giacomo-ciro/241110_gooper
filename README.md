@@ -2,14 +2,14 @@
 Building a search engine for influencers. 
 
 ## To-do list
-- [x] ~~Implement `discriminator_agent` for conversational ability~~
-- [x] ~~Implement `GooperModel` class~~
 - [ ] Implement `feedback_agent` to provide feedback when invalid input
 - [ ] Convert from client calls to API calls
-- [x] ~~Migrate Influencer Database to Supabase~~
 - [ ] Scale database to 100,000 influencers
 - [ ] embed profile summary directly (bypass description generation)
-- [ ] improve performance (model is slow to respond)
+- [x] ~~Implement `discriminator_agent` for conversational ability~~
+- [x] ~~Implement `GooperModel` class~~
+- [x] ~~Migrate Influencer Database to Supabase~~
+- [x] ~~improve performance (model is slow to respond)~~
 - [x] ~~Implement model API for custom deployment~~
 
 ## Release History
