@@ -1,4 +1,0 @@
-Welcome to the Gooper API. The only available endpoint is `/generate/` followed by the user's prompt the model will respond to.
-For example, `/generate/my%20brand%20specializes%20in%20food`
-will generate a response to the prompt
-"my brand specializes in food"
